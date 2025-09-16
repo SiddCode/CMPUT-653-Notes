@@ -1,0 +1,658 @@
+% STANDARD PACKAGES
+\documentclass[12pt, twoside]{article}
+\usepackage{graphicx} % Inserting Images
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb, mathtools, marvosym}
+\usepackage [english]{babel}
+\usepackage [autostyle, english = american]{csquotes}
+\MakeOuterQuote{"} % No need to do \enquote{...}
+
+% HYPERLINKING and FORMATTING
+\usepackage{xcolor} % Hyperlink style
+\usepackage{hyperref} % Hyperlinking
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+\usepackage{caption} % Make hyperlink format nice
+\captionsetup[figure]{labelfont=bf}
+\usepackage{float} % Makes image formatting good
+
+% REFERNCES and CITATION
+ \usepackage[
+    backend=biber,
+    style=ieee,
+  ]{biblatex}
+ \addbibresource{references.bib}
+
+% HEADER SETUP AND STYLE
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}  % Clear all header/footer fields
+\fancyheadoffset{0pt} % Makes horizontal line text width
+
+
+% LECTURE TITLE BOX COMMAND
+\newcommand{\makelecturetitle}[4]{%
+    \thispagestyle{fancy}
+    \vspace*{-1.1cm}
+    \framebox[\textwidth]{
+        \vbox{
+            \vspace{1mm}
+            \hbox to \textwidth { {\footnotesize \bfseries CMPUT 653: Foundations of Reasoning in LLMs \hfill Fall 2025} }
+            \vspace{3mm}
+            \hbox to \textwidth { {\large\hfill #1 \hfill} }
+            \vspace{2mm}
+            \hbox to \textwidth { {\footnotesize\itshape Lecturer: #2 \hfill #4 \hfill Scribe: #3} }
+            \vspace{1mm}
+        }
+    }
+    \vspace*{-0.6cm}
+}
+
+
+% 1) Header content
+\fancyhead[L]{\nouppercase{\leftmark}}   % Current section title (top-left)
+\fancyhead[R]{\thepage}                  % Page number (top-right)
+
+% 2) Ensure section titles are captured in \leftmark
+\makeatletter
+\renewcommand{\sectionmark}[1]{%
+  \markboth{\thesection\quad #1}{}%
+}
+\makeatother
+
+% FIGURE NUMBER BY SUBSECTION
+\usepackage{chngcntr}
+\counterwithin{figure}{subsection}
+\renewcommand{\thefigure}{\arabic{section}.\arabic{subsection}.\arabic{figure}}
+
+% THEOREM/DEFINITION STYLES
+\newtheoremstyle{spaceddefn}  % Name of style
+  {1em}   % Space above
+  {1em}   % Space below
+  {}      % Body font
+  {}      % Indent amount
+  {\bfseries} % Theorem head font
+  {.}     % Punctuation after theorem head
+  {.5em}  % Space after theorem head
+  {}      % Head spec
+
+\theoremstyle{spaceddefn}
+
+% All under the same section/subsection counter
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+
+% A new counter under
+\newtheorem{definition}{Definition}[section]
+\newtheorem{remark}{Remark}[section]
+\newtheorem{example}{Example}[section]
+\newtheorem{exercise}{Exercise}[section]
+\newtheorem{soln}{Solution}[section]
+\newtheorem{question}{Question}[section]
+
+%\newcommand{"command"}[arguments]{what the command actually is}
+\newcommand{\NN}[0]{\mathbb{N}}
+\newcommand{\RR}[0]{\mathbb{R}}
+\newcommand{\CC}[0]{\mathbb{C}}
+\newcommand{\FF}[0]{\mathbb{F}}
+\newcommand{\inner}[2]{\left\langle#1, #2\right\rangle}
+\newcommand{\soa}[1]{{#1}}
+\newcommand{\mapping}[0]{\overset{}{\longrightarrow}}
+\newcommand{\conv}[0]{\mathrm{conv}}
+\newcommand{\aconv}[0]{\mathrm{aconv}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calH}{\mathcal{H}}
+\newcommand{\calI}{\mathcal{I}}
+\newcommand{\calJ}{\mathcal{J}}
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calN}{\mathcal{N}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calQ}{\mathcal{Q}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+
+
+% POTENTIALLY BETTER SPACING???
+% \DeclareMathOperator*{\argmin}{arg\,min}
+% \DeclareMathOperator*{\argmax}{arg\,max}
+% \DeclareMathOperator*{\supp}{supp}
+% \DeclareMathOperator*{\rank}{rank}
+% \DeclareMathOperator*{\diag}{diag}
+% \DeclareMathOperator*{\Tr}{Tr}
+
+
+% FORMATTING and FONT
+\usepackage{parskip} % Leaves a blank line between paragraph and omits indentation
+\usepackage[margin=1.5in]{geometry} % Set default 1.5 inch margins
+\usepackage{setspace} % Default spacing to 1 by setstretch
+\setstretch{1} % Default spacing to 1
+\usepackage{lmodern} % Cleaner/Modern font
+\usepackage{enumitem} % Customizable lists/enumeration
+\setlist[itemize,2]{label=$\circ$} % Set white bullet (◦) for second-level itemize
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \vspace*{\fill}
+    \vspace*{-5cm} % Move up by 2cm
+    {\LARGE CMPUT 653: Foundations of Reasoning \newline in LLMs Lecture Notes\par}
+    \vspace{0.6cm}
+    {\Large Siddhartha Chitrakar\par}
+    \vspace{0.5cm}
+    {\large \today\par}
+    \vspace*{\fill}
+\end{titlepage}
+
+% Roman Page Numbering for Preface
+\pagenumbering{roman}
+\setcounter{page}{2}
+
+\newpage
+
+% ↓↓↓ REMOVE SECTION FROM HEADER ↓↓↓
+\fancypagestyle{RemoveHeader}{
+  \fancyhf{} % clear all headers/footers
+  \fancyhead[R]{\thepage} % keep page number on top right
+}
+\thispagestyle{RemoveHeader}
+% ↑↑↑ REMOVE SECTION FROM HEADER ↑↑↑
+
+\tableofcontents
+\newpage
+
+% ↓↓↓ SHOW CORRECT SECTION FROM HEADER WITHOUT # ↓↓↓
+\markboth{Preface}{Preface}
+\section*{Preface}
+\addcontentsline{toc}{section}{Preface}
+
+\subsection*{Symbols and Remark on Notation}
+\addcontentsline{toc}{subsection}{Symbols and Remark on Notation}
+% ↑↑↑ SHOW CORRECT SECTION FROM HEADER WITHOUT # ↑↑↑
+
+
+Things to do:
+
+Include macros shortcuts
+
+Other minor things, alternate section and subsection at header, symbols page, index page, better appendix
+
+\subsection*{Acknowledgments}
+\addcontentsline{toc}{subsection}{Acknowledgments}
+
+\newpage
+
+% Normal Page Numbering for Main Text
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\makelecturetitle{\href{https://youtu.be/3bG2Dy7Du0Y?si=GEyV1hcv_MvwvY_Z}{Lecture 1 Video}, \href{https://youtu.be/DR8bQPoRlX8?si=h5u-xZKmQuMA6K5N}{Lecture 2 Video}}{Csaba Szepesvári}{Siddhartha Chitrakar}{Sep. 3 and Sep. 5 2025}
+
+% ↓↓↓ REMOVE SECTION FROM HEADER ↓↓↓
+\fancypagestyle{RemoveHeader}{
+  \fancyhf{} % clear all headers/footers
+    \fancyhead[R]{\thepage} % keep page number on top right
+}
+\thispagestyle{RemoveHeader}
+% ↑↑↑ REMOVE SECTION FROM HEADER ↑↑↑
+
+% ↓↓↓ SHOW CORRECT SECTION FROM HEADER WITHOUT # ↓↓↓
+\markboth{Lecture 1 and 2: Modelling Sequences}{Lecture 1 and 2: Modelling Sequences}
+\stepcounter{section}
+\section*{Lecture 1 and 2: Modelling Sequences}
+\addcontentsline{toc}{section}{1. Modelling Sequences}
+% ↑↑↑ SHOW CORRECT SECTION FROM HEADER WITHOUT # ↑↑↑
+
+\textit{Note:} Lecture 1 contains errors due to reusing the notation $p$ for different meanings. Lecture 2 corrected this; [*timestamp] used to link second lecture.
+
+
+We use \textbf{probabilistic sequence models} to model sequences. Exercise \ref{ex:1.1}, \ref{ex:1.2} intuitively explain why we use this, but first we introduce some notation:
+
+\begin{itemize}
+    \item $\Sigma$ - Alphabet Characters (set of all 1 length sequences)
+    \begin{itemize}
+        \item English lowercase alphabet: $\Sigma=\{a, b, c, d, \dots, y, z\}$
+        \item DNA alphabet $\Sigma = \{A,C,G,T\}$
+        \item LLM alphabet usually has at least 30,000 unique characters
+    \end{itemize}
+
+     \item Concatenation - An operation (denoted by $\oplus$) that joins two sequences
+     \begin{itemize}
+        \item $a\oplus b=ab$
+    \end{itemize}
+\end{itemize}
+
+Thus, we define n length sequences by concatenation:
+\begin{itemize}
+    \item $\Sigma^2 \coloneqq \{a_1a_2:a_1,a_2 \in \Sigma\}$, (set of all 2 length sequences)
+    \begin{itemize}[label=$\circ$]
+        \item If $\Sigma=\{a,b\}$ then, $\Sigma^2=\{aa,ab,ba,bb\}$
+    \end{itemize}
+    \item $\Sigma^n\coloneqq \{a_1a_2\dots a_n:a_1,a_2,\dots a_n \in \Sigma\} $, (set of all $n$ length sequences)
+    \begin{itemize}
+        \item $w = (w_1w_2\dots w_n)\in\Sigma^n$ (sequence of length $n$ in order from $w_1 \text{ to } w_n$)
+    \end{itemize}
+    \item $\Sigma^0 \coloneqq \emptyset \coloneqq \{\bot\}$, ($\bot$ denotes the empty length sequence)
+\end{itemize}
+
+We can find the size (cardinality) of these n length sequences sets:
+\begin{itemize}
+    \item $|\Sigma| = N$
+    \item $|\Sigma^2| = N^2$
+    \item $|\Sigma^n| = N^n$
+\end{itemize}
+
+\begin{remark}
+    Keep note that the number of sequences of length n grows exponential since $|\Sigma|^n=N^n$
+\end{remark}
+
+\begin{definition}
+    We define the set of \textbf{all possible sequences} as
+    \[\Sigma^* \coloneqq \bigcup_{n=0}^{\infty} \Sigma^n \]
+\end{definition}
+
+\begin{exercise} \label{ex:1.1}
+     Let $\mathcal{L} \subseteq \Sigma^*$ be a language. We deterministically define a recognizer function $r$ such that  $r: \Sigma^* \to \{ \text{yes}, \text{no} \}$. \textbf{Why is this problematic?}
+\end{exercise}
+
+\begin{exercise} \label{ex:1.2}
+    Consequently to Exercise \ref{ex:1.1}, what are some advantages of using probabilistic sequence models?
+\end{exercise}
+
+\phantomsection
+\subsection*{1.1 Defining a probability distribution \href{https://youtu.be/3bG2Dy7Du0Y?si=g2tHZbM3oEpgRSpv&t=1944}{[32:24]}}
+\addcontentsline{toc}{subsection}{1.1 Defining a probability distribution}
+
+We define a probability distribution $p$ over the set of all possible sequences $\Sigma^*$.
+\[ p: \Sigma^* \to [0, 1] \]
+such that the following conditions are met:
+\begin{enumerate}
+    \item $0 \le p(w) \le 1$ for all sequences $w \in \Sigma^*$.
+    \item $ \sum_{w \in \Sigma^*} p(w) = 1 $
+\end{enumerate}
+
+
+With this distribution, we perform text completion tasks. Let $w \in \Sigma^*$ be a sequence, called \textbf{prefix}/\textbf{prompt}. Let $U \in \Sigma^*$ be a \textbf{random completion}.
+
+We define a completed sequence $W'$ as the concatenation of the prompt and the random completion:
+\[ W' \coloneqq w \oplus U \]
+We consider the probabilities for all possible completions, $\forall u \in \Sigma^*$:
+\[ P(W' = w \oplus u) = p(w \oplus u) \]
+
+\begin{example}
+    Consider prefix $w =$ "The weather is...". The random completion, U, could be $u_1=$"hot", $u_2=$"tornado", $u_3$="biking". Based on what our model is trained on it would likely output decreasing probabilities respectively.
+\end{example}
+
+\begin{remark}
+This is how LLMs works. When you give a prompt $w$, it samples from all possible completions $u$. However, $\Sigma^*$ is countably infinte, so how do we learn a probability for every sequence?
+\end{remark}
+
+\subsection*{1.2 Decomposition by Chain Rule \href{https://youtu.be/DR8bQPoRlX8?si=4XI5qRSxxBxY80oO&t=29}{[*00:29]}}
+\addcontentsline{toc}{subsection}{1.2 Decomposition by Chain Rule}
+
+This section deals with the problem of $\Sigma^*$ being countably infinite.
+
+\begin{definition}[Chain Rule] \label{def:1.2}
+Let $w = (w_1, w_2, \dots, w_n)$ (sequence of length $n$. The joint probability of the sequence, $p(w)$, can be decomposed:
+\[ p(w) = p(w_1) \cdot p(w_2 | w_1) \cdot p(w_3 | w_1, w_2) \cdots p(w_n | w_1, \dots, w_{n-1}) \]
+\end{definition}
+
+We will \textbf{exploit} what is the next character given what we have though Chain Rule. First, we ask how can a probabilistic model know when to stop?
+
+
+
+\begin{definition}[STOP Symbol]
+A character $\langle STOP \rangle$ that signals the model when to stop.
+\end{definition}
+
+\textbf{Intuition:} To define conditional probabilities we...
+\begin{enumerate}
+    \item Start from the distribution of all possible sequences. (Section 1.1)
+    \item Now define conditional probability from this (Section 1.2.1)
+\end{enumerate}
+
+\begin{remark} [Bottom-up approach]
+    We could have started from the conditional distribution, then use chain rule to get the distribution of all sequences.
+\end{remark}
+
+\subsubsection*{1.2.1 Defining the conditional distribution \href{https://youtu.be/DR8bQPoRlX8?si=YfpqZSf6sS3tfome&t=105}{[*1:45]}}
+
+Let $W\sim p$, be a random variable sample of a random string. Formally, $$\forall w \in\Sigma^*, \mathbb{P}(W_n = w_n)=p(w)$$
+
+Goal: Derive a conditional distribution of the next character from known info:
+$$\mathbb{P}(W_n=w_n|W_{1:n-1}=w_{1:n-1})$$
+
+\begin{exercise} \label{ex:1.3}
+ What is the problem about this "Goal"? Why would we need to extend $\langle STOP \rangle$ to $W_n$ to infinite sequences?
+\end{exercise}
+
+\begin{definition}[Extend Stop to Infinite Sequences]
+    Define $\hat{\Sigma} \coloneqq \Sigma \cup \langle STOP \rangle$. Additionally, pad the random variable, $W$, to an infinite sequence:
+    $$\hat{W}=W\langle STOP \rangle\langle STOP \rangle\langle STOP \rangle...$$
+\end{definition}
+
+\begin{theorem}[Conditional Distribution of $p$] \label{thm:1.1}
+Let $\hat{p}:\bigcup_{n \geq 1}\Sigma^{n-1} \times \hat{\Sigma}\to [0,1]$,
+\begin{align*}
+\hat{p}(w_n|w_{1:n-1})
+  &\coloneqq \mathbb{P}(\hat{W_n}=w_n|\hat{W}_{1:n-1}=w_{1:n-1}) \\
+  &= \begin{cases}
+       \frac{\mathbb{P}(\hat{W}_{1:n}=w_{1:n})}{\mathbb{P}(\hat{W}_{1:n-1}=w_{1:n-1})} & \text{if } \mathbb{P}(\hat{W}_{1:n-1}=w_{1:n-1}) \neq 0 \\
+       p_0(w_n)  & \text{if } \mathbb{P}(\hat{W}_{1:n-1}=w_{1:n-1}) = 0
+     \end{cases}
+\end{align*}
+by Chain Rule Definition \ref{def:1.2} and let $p_0$ be any distribution.
+
+
+\end{theorem}
+
+
+\begin{exercise} \label{ex:1.4}
+    Prove Theorem \ref{thm:1.1} is a probability distribution
+\end{exercise}
+
+\begin{remark}
+Theorem \ref{thm:1.1}, $\tilde{p}$, suffices to model completion tasks like Definition \ref{def:1.4} (Autoregressive models). We generate a character by character completion sequence until the model samples $\langle \text{STOP} \rangle$.
+\end{remark}
+
+\begin{definition}[\textbf{Autoregressive Model}] \label{def:1.4}
+Autoregressive models predict the next value in a sequence based on the values that came before it.
+\end{definition}
+\newpage
+
+\subsection*{Lecture 1 and 2 Exercises Solutions \small (Tentative, will be updated)}
+
+\begin{soln}
+    This forces a yes/no decision, and languages are too complex to be deterministically decided like this. For example, language can be interpreted or explained in many different ways.
+\end{soln}
+
+\begin{soln}
+    Compared to Exercise \ref{ex:1.1}, this relaxes the deterministic clause and instead we ask how likely is a sequence part of a language. This allows us to navigate the complexities and nuances of languages better.
+\end{soln}
+
+\begin{soln}
+First, we look at \textbf{finite sequences}, $\Sigma^{n*} \coloneqq \bigcup_{i=0}^{n} \Sigma^i$.
+
+    Consider a conditional distribution on finite sequences, $\hat{p}:\Sigma^{n*} \times \Sigma \to [0,1], $ $$ \hat{p}(w_1w_2\dots
+    w_{n+1})\coloneqq p(w_{n+1}|w)=\frac{p(w_1w_2\dots w_{n+1})}{p(w_1w_2 \dots w_{n})}$$
+
+    \textbf{Claim:} For any sequence w $\in \Sigma^n$, we must extend $\langle \text{STOP} \rangle$ so $|w| = n$.
+    \vspace{-0.2cm}
+    \begin{proof}
+        Contradiction: Assume we don't extend $\langle \text{STOP} \rangle$. Start with $n=2$, then, the outcomes are $\{\emptyset, a,b, ab, ba, aa, ba\}$. Suppose $p(b)=\frac{1}{3}$ and $p(ba)=\frac{2}{3}$, then $p(ba|b)= \frac{p(ba)}{p(b)}=\frac{2/3}{1/3}=2 !?$ So what went wrong?
+
+         $p(b)$ is exactly b. But, it should be the prob. that the first letter seen is b.
+
+        Formally, we want $p(b)$ as $p(b) + p(ba) +p(bb)$. To do this, we extend $\langle \text{STOP} \rangle$ so $p(b)=p(b \oplus \langle \text{STOP} \rangle)+p(ba)+p(bb)$. If we want to know the prob. that the sequence is exactly b, it is now $p(b \oplus \langle \text{STOP} \rangle)$
+
+        We can inductively show that $\forall n \geq 2$, we must extend $\langle \text{STOP} \rangle$.
+    \end{proof}
+        \vspace{-0.2cm}
+        \textbf{To end,} $\Sigma^*$ is countably infinite, thus we must extend $\langle \text{STOP} \rangle$ to infinite sequences. Importantly, this makes the conditional dependencies compatible!
+    \vspace{0.0005cm}
+    \hrule
+
+     \textbf{Intuition explanation:} Consider $w = \text{"The weather is"}$ and $w_{n+1} = \text{"hot"}$. Then, the sentence, "The weather is", is not valid and rarely seen.
+
+    $p(\text{\small"The weather is"}) < p(\text{\small"The weather is hot"}) \implies \tilde{p}$(\small"The weather is hot") $> 1$. \normalsize Clearly, without extending, the conditional dependencies is not compatible.
+
+\end{soln}
+
+\begin{soln}
+    [Prove this and the compatibility yourself...]
+\end{soln}
+
+\newpage
+
+\makelecturetitle{\href{https://youtu.be/DR8bQPoRlX8?si=7TSFYC2ReK8cKmKt&t=1630}{Lecture 2 Video [27:10]}, \href{https://youtu.be/1u6h3Nm3NvM?si=Usuv7wZpuFCisYut}{Lecture 3 Video}}{Csaba Szepesvári}{Siddhartha Chitrakar}{Sep. 5 and Sep. 9 2025}
+
+% ↓↓↓ REMOVE SECTION FROM HEADER ↓↓↓
+\fancypagestyle{RemoveHeader}{
+  \fancyhf{} % clear all headers/footers
+    \fancyhead[R]{\thepage} % keep page number on top right
+}
+\thispagestyle{RemoveHeader}
+% ↑↑↑ REMOVE SECTION FROM HEADER ↑↑↑
+
+% ↓↓↓ SHOW CORRECT SECTION FROM HEADER WITHOUT # ↓↓↓
+\markboth{Lecture 2 and 3: Transformer Architecture}{Lecture 2 and 3: Transformer Architecture}
+\stepcounter{section}
+\section*{Lecture 2 and 3: Transformer Architecture}
+\addcontentsline{toc}{section}{2. Transformer Architecture}
+% ↑↑↑ SHOW CORRECT SECTION FROM HEADER WITHOUT # ↑↑↑
+
+\textit{Note:} Lecture 3 recapped and continued the discussion of Transformer Architecture; [*timestamp] used to link Lecture 3.
+
+\textbf{Assumption:} From now on and for convenience $\Sigma \coloneqq \hat{\Sigma}=\Sigma \cup \langle STOP\rangle$
+
+\begin{exercise}
+    Read over this lecture: Provide the intuition and re-define the transformer architecture to the specific well-known euclidean space $\mathbb{R}^n$.
+\end{exercise}
+
+Transformers map strings to strings, and we generalize them to abstract vector spaces for alternatives to Euclidean space \textit{(e.g language RASP)}. Why are vector spaces important? The transformer acts in the workspace $\mathcal{W}$.
+
+\begin{definition}[Workspace]
+Let $\mathcal{W} \neq \emptyset$ be a \textbf{vector space} over scalars $\{0, 1\}$ called a \textbf{workspace}. The elements $\mathbf{x} \in \mathcal{W}$ are called vectors.
+
+Recall vector spaces are equipped with two operations, addition ($+$) and scalar multiplication ($\cdot$), which for $\forall \mathbf{x}, \mathbf{y} \in \mathcal{W}$:
+\begin{enumerate}
+    \item \textbf{Closure under Addition:} $\mathbf{x} + \mathbf{y} \in W$.
+    \item \textbf{Scalar Multiplication:} $1 \cdot \mathbf{x} = \mathbf{x}$ and $0 \cdot \mathbf{x} = \mathbf{0}$
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Embedding Map]
+Let $e: \Sigma \to \mathcal{W}$ be an embedding map that maps each $x \in \Sigma$ to a vector representation $\mathbf{w} \in \mathcal{W}$.
+$$ e(x) = \mathbf{w} $$
+\end{definition}
+
+\begin{definition}[Unembedding Map]
+Let $u: \mathcal{W} \to \Sigma$ be an unembedding map that maps each vector $\mathbf{w} \in \mathcal{W}$ back to a character $x \in \Sigma$
+$$ u(\mathbf{w}) = x $$
+\end{definition}
+
+\begin{remark}
+    The embedding/unembedding maps aren't inverses. Sometimes they reverse the same info, but these are not bijections (different dimensions).
+\end{remark}
+
+\newpage
+
+Before we define transformers, here is \textbf{notation} for component map extension
+\begin{itemize}
+    \item If given $(a_1,a_2,\dots,a_n)\in A^n$, then the component map extension is
+        \begin{itemize}
+        \item $s^{[n]}((a_1,a_2,\dots,a_n))=(s(a_1),s(a_2),\dots,s(a_n))$
+        \item $s(a_1,a_2,...,a_n)\coloneqq s^{[n]}((a_1,a_2,\dots,a_n))$ (Drop the [n] for brevity)
+    \end{itemize}
+\end{itemize}
+
+\subsection*{2.1 Intuition of Transformer Architecture }
+\addcontentsline{toc}{subsection}{Intuition of Transformer Architecture}
+
+\textbf{Intuition:} \href{https://www.youtube.com/watch?v=KJtZARuO3JY}{[Talk by 3B1B]} is a good source to visualize the intuition
+
+Transformers, $f$, maps an input $\Vec{w}\in \Sigma^*$,  to an output $\Vec{w}\in \Sigma^*$ by refining the representation of $\Vec{w}$. Goal: "Enrich" the vector with information. The "enriching" process is a sequential composition of functions:
+\[ f = u^{[n]} \circ f_L^{(n)} \circ \dots \circ f_1^{(n)} \circ e^{[n]} \]
+
+\subsubsection*{Step 1. Embedding ($e^{[n]}$)}
+First, $e^{[n]}: \Sigma^n \to \mathcal{W}^n$, embeds a input sequence $\Vec{w}\coloneqq(w_1,...,w_n)\in \Sigma^*$ component wise to a vector sequence $(e(w_1),...,e(w_n))=(\mathbf{x_1},...,\mathbf{x_n})\in \mathcal{W}^n$.
+
+\subsubsection*{Step 2. Transformer Layers ($f_\ell^{(n)}$)}
+The vector sequence $(\mathbf{x_1},...,\mathbf{x_n})$ is then processed through finitely many $L$  layers. Each layer, $f_\ell^{(n)}$, refines every vector by two sub-steps:
+
+\paragraph{Step 2.1 Attention ($A_\ell^{(n)}$):} Updates vectors $\mathbf{x}_i$ by aggregating "useful" info from the entire sequence. How do you determine the "useful" info:
+\begin{description}
+    \item[Query ($q_\ell$):] Asks current vector $\mathbf{x}_i$, "What info do I need?"
+    \item[Key ($k_\ell$):] Answers from other vector $\mathbf{x}_j$, "This is the info I represent."
+    \item[Attention Score ($a_\ell$):] Compares Query ($\mathbf{x}_i$), with Key ($\mathbf{x}_j$) for relevance.
+    \item[Value ($v_\ell$):] The actual info of vector $\mathbf{x}_j$ if deemed relevant (key/query matches)
+\end{description}
+
+\paragraph{Step 2.2 Multilayer perceptron ($m_\ell^{[n]}$):}
+The multilayer perceptron $m_\ell^{[n]}$ performs a non-linear transformation on each vector independently.
+
+\subsubsection*{Step 3. Unembedding ($u^{[n]}$)}
+
+After $L$ layers, the "enriched" vectors is unembeded by $u^{[n]}: \mathcal{W}^n \to \Sigma^n$. This maps the last vectors to the vocab space $\Sigma$ to produce an output sequence.
+
+\subsection*{2.2 Definition of Transformer Architecture \href{https://youtu.be/DR8bQPoRlX8?si=7ShQDJNzFFenFIuP&t=2253}{[37:39]}, \href{https://youtu.be/1u6h3Nm3NvM?si=Orlh2gRtZ3yXKfI9&t=373}{[*6:13]}}
+\addcontentsline{toc}{subsection}{Definition of Transformer Architecture}
+
+\begin{definition}[Transformer Map] \label{def:2.4}
+$f: \Sigma^* \to \Sigma^*$ is a regular \textbf{transformer map} over the sets of functions $\mathcal{M}, \mathcal{A}, \mathcal{Q}, \mathcal{K}, \mathcal{V}$ if $\forall n \ge 1$,
+\[
+f|_{\Sigma^n} = u^{[n]} \circ f_L^{(n)} \circ \dots \circ f_1^{(n)} \circ e^{[n]}
+\]
+such that for each layer $\ell \in \{1, \dots, L\}$:
+\begin{enumerate}
+    \item The layer function $f_\ell^{(n)}$ is a composition $f_\ell^{(n)} = m_\ell^{[n]} \circ A_\ell^{(n)}$, s.t $m_\ell^{[n]} \in \mathcal{M}$.
+    \begin{itemize}
+        \item The compositions are a multilayer perceptron and attention map.
+
+    \end{itemize}
+
+    \item The attention map $A_\ell^{(n)}: \mathcal{W}^n \to \mathcal{W}^n$ is defined $\forall \mathbf{x} \in\mathcal{W}^n$,
+    \[
+    (A_\ell^{(n)}(\Vec{x}))_i = \mathbf{x}_i + \sum_{j=1}^{n} a_\ell(q_\ell(\mathbf{x}_i), k_\ell(\mathbf{x}_j))v_\ell(\mathbf{x}_j)
+    \]
+    where $a_\ell \in \mathcal{A}$, $q_\ell \in \mathcal{Q}$, $k_\ell \in \mathcal{K}$, and $v_\ell \in \mathcal{V}$.
+
+    \begin{enumerate}
+    \item[{2.1.}] Function $a_\ell \in \mathcal{A}$ is the attention pattern which determines whether information from vector $j$ (via $v_\ell(\mathbf{x}_j)$) is passed to vector $i$:
+    \[
+    a_\ell: \mathcal{W} \times \mathcal{W} \to \{0, 1\}
+    \]
+
+    \item[{2.2.}] In practice, the summation is \textbf{normalized}
+        \[
+         \frac{\sum_{j=1}^{n}a_\ell(q_\ell(\mathbf{x}_i), k_\ell(\mathbf{x}_j))v_\ell(\mathbf{x}_j)}{\sum_{j=1}^{n} a_\ell(q_\ell(\mathbf{x}_i), k_\ell(\mathbf{x}_k))}
+        \]
+
+\item[{2.3}] However, we need a \textbf{probabilistic unembedding} to predict the next sequence defined in Theorem \ref{thm:1.1}. The unembedding ($u$) maps the final vector representation, $\mathbf{x}_i \in \mathcal{W}$, to a probability distribution $\mathbf{\pi}_i \coloneqq\frac{\exp(\mathbf{w}_{j}^T \mathbf{z}_i)}{\sum_{j \in \Sigma} \exp(\mathbf{w}_{g}jT \mathbf{z}_i)}$ over the alphabet $\Sigma$. \href{https://youtu.be/1u6h3Nm3NvM?si=le_Dg2Rl3Kr4Mv3s&t=1184}{[*19:44]}
+
+    \end{enumerate}
+\end{enumerate}
+\textit{Note:} Summation range can be modified, $j < i$ for \textbf{causal attention} or $j \neq i$ .
+\end{definition}
+
+\subsubsection*{2.2.1 Discussion About Transformer Architecture \href{https://youtu.be/1u6h3Nm3NvM?si=cJQ1smjRAK88W2C7&t=1543}{[*25:43]}}
+
+\textit{Note:} The discussion is to introduce different aspects about transformers.
+
+\textbf{Sparse Attention \href{https://youtu.be/1u6h3Nm3NvM?si=cJQ1smjRAK88W2C7&t=1543}{[*25:43]}:} The attention normalization in Definition \ref{def:2.4} creates a global dependency that's recalculated for every update, leading to $O(n^2)$ complexity and poor caching. This motivates \textbf{sparse attention} where each vector only attends to a limited subset of vectors.
+
+\textbf{Positional Embeddings \href{https://youtu.be/1u6h3Nm3NvM?si=MPObGmLgx7i59976&t=1763}{[*29:23]}:} The attention summation is permutation-invariant. However, in langauge, word order absolutely matters!
+
+\begin{itemize}
+    \item Initial solution adds a position vector $\mathbf{p}_1,...\mathbf{p_n} \in \mathcal{W}$ to each input $\mathbf{x}_i$. The query and key become $q_\ell(\mathbf{x}_i + \mathbf{p}_i)$ and $k_\ell(\mathbf{x}_j + \mathbf{p}_j)$. This struggles with infinite sequences $\textbf{p}_1,\textbf{p}_2,...;$ thus, we now use rotational embeddings
+    \item \textbf{Rotational Positional Embeddings \href{https://youtu.be/1u6h3Nm3NvM?si=uJFx5andJnolQajy&t=4397}{[*1:13:17]}:} Positional dependent matrix, $R_i$ acting on queries and keys.
+\[
+\mathbf{q}'_i = R_i q_\ell(\mathbf{x}_i) \quad \text{and} \quad \mathbf{k}'_j = R_j k_\ell(\mathbf{x}_j)
+\]
+The attention score depends on the relative distance between vectors, due to the rotation matrix property ($R_i^T R_j = R_{i-j}$):
+\[
+\langle \mathbf{q}'_i, \mathbf{k}'_j \rangle = (R_i q_\ell(\mathbf{x}_i))^T (R_j k_\ell(\mathbf{x}_j)) = q_\ell(\mathbf{x}_i)^T R_{i-j} k_\ell(\mathbf{x}_j)
+\]
+This allows the model to generalize far better to unseen sequence lengths!
+
+\end{itemize}
+
+
+
+\textbf{Multi-headed Attention \href{https://youtu.be/1u6h3Nm3NvM?si=8XEsgSeUe-450EJZ&t=2490}{[*41:30]}:} This addresses different types of information simultaneously by running attention patterns in parallel.
+
+\textbf{Mixtures of Experts \href{https://youtu.be/1u6h3Nm3NvM?si=n3l9F7Tf5RbvhOU4&t=4010}{[*1:06:50]}:} Analogous to multi-headed attention where we have a set of $k$ parallel "expert" MLPs, denoted as $m_i(x)$, and a trainable gating network $p$. For each input, the gating network selects a subset of the experts.
+
+\begin{itemize}
+    \item \textbf{Expert Networks ($m_i$):} A collection of $k$ parallel MLPs.
+    \item \textbf{Gating Network ($p$):} A trainable network that outputs a probability distribution over the experts. The weight for the $i$-th expert is $p_i(x)$.
+    \item For sequence $x$, $y$ is the weighted sum of the outputs from all experts.
+$$ y = \sum_{i=1}^{k} p_i(x) \cdot m_i(x)$$
+    \item Load balancing prevents the gating network from  using the same few favorite experts. For a fixed context sequence $x_1,...,x_T$, the cumulative weight to each expert is roughly equal:
+$$ \sum_{t=1}^{T} p_i(x_t) \approx \frac{T}{k} $$
+\end{itemize}
+
+Other Discussions:
+\begin{itemize}
+    \item \href{https://youtu.be/1u6h3Nm3NvM?si=DPbOrvmmc-rPRJFs&t=3055}{Decoding Strategies [*50:55]}
+    \item \href{https://youtu.be/1u6h3Nm3NvM?si=vG1ilQpx0IZ3sRSs&t=3682}{Complexity of Matrices [*1:01:22]}
+    \item \href{https://youtu.be/1u6h3Nm3NvM?si=9r417PXiPrKnlHgQ&t=3833}{Precision [*1:03:53]}
+    \item \textbf{Layered Norm \href{https://youtu.be/1u6h3Nm3NvM?si=AD17k53UucXSlnau&t=2622}{[*43:42]}:} Randomly thrown in to rescale the vectors to have a consistent mean and variance. This is done to stabilize the transformer.
+\end{itemize}
+
+
+\newpage
+
+\subsection*{Lecture 2 and 3 Exercises Solutions \small (Tentative, will be updated)}
+
+\begin{soln}
+
+Why in practice do we use $\mathbb{R}^n$? So we can encode the sequences to vectors and provide some meaning to it with numbers.
+
+\textbf{Redefining Transformers}
+Now the abstract workspace $\mathcal{W}=\mathbb{R}^d$
+
+\textbf{Embedding Map:} $e^{[n]}: \Sigma^n \to \mathbb{R}^d$ encodes sequences to vectors
+
+\textbf{Unembedding Map:} $u^{[n]}: \mathbb{R}^d \to \Sigma^n$ encodes vectors back to sequences.
+\begin{itemize}
+    \item In practice, there is a \textbf{softmax function} to get a probability distribution.
+\end{itemize}
+
+\textbf{Query, Key, Value ($q_\ell, k_\ell, v_\ell$} These are linear transformations meaning matrix multiplication! $q_\ell(\mathbf{x}_i) = W_Q \mathbf{x}_i$, $k_\ell(\mathbf{x}_j) = W_K \mathbf{x}_j$, and $v_\ell(\mathbf{x}_j) = W_V \mathbf{x}_j$, where $W_Q, W_K, W_V$ are learned weight matrices.
+
+\textbf{Attention Score ($a_\ell$)}: scaled dot-product to measure similarity by direction
+\[ a_\ell(q,k) = \text{softmax}\left(\frac{q^T k}{\sqrt{d_k}}\right) \]
+Measures similarity between the query and key vectors
+
+
+\end{soln}
+
+\newpage
+
+\markboth{Appendix A}{Appendix A}
+\section*{Appendix A: Extra Proofs and Results}
+\addcontentsline{toc}{section}{Appendix A: Extra Proofs and Results}
+
+Sigma Algebra on sigma*
+
+
+Some appendix content here.
+
+\markboth{Appendix B}{Appendix B}
+\section*{Appendix B: Supplementary Figures}
+\addcontentsline{toc}{section}{Appendix B: Supplementary Figures}
+
+More appendix content here.
+
+\newpage
+\printbibliography
+\addcontentsline{toc}{section}{References}
+
+
+
+\end{document}
