@@ -1,159 +1,7 @@
 % STANDARD PACKAGES
 \documentclass[12pt, twoside]{article}
-\usepackage{graphicx} % Inserting Images
-\usepackage[utf8]{inputenc}
-\usepackage{amsmath, amsthm, amssymb, mathtools, marvosym}
-\usepackage [english]{babel}
-\usepackage [autostyle, english = american]{csquotes}
-\MakeOuterQuote{"} % No need to do \enquote{...}
 
-% HYPERLINKING and FORMATTING
-\usepackage{xcolor} % Hyperlink style
-\usepackage{hyperref} % Hyperlinking
-\hypersetup{
-    colorlinks,
-    linkcolor={red!50!black},
-    citecolor={blue!50!black},
-    urlcolor={blue!80!black}
-}
-\usepackage{caption} % Make hyperlink format nice
-\captionsetup[figure]{labelfont=bf}
-\usepackage{float} % Makes image formatting good
-
-% REFERNCES and CITATION
- \usepackage[
-    backend=biber,
-    style=ieee,
-  ]{biblatex}
- \addbibresource{references.bib}
-
-% HEADER SETUP AND STYLE
-\usepackage{fancyhdr}
-\usepackage{lastpage}
-\pagestyle{fancy}
-\fancyhf{}  % Clear all header/footer fields
-\fancyheadoffset{0pt} % Makes horizontal line text width
-
-
-% LECTURE TITLE BOX COMMAND
-\newcommand{\makelecturetitle}[4]{%
-    \thispagestyle{fancy}
-    \vspace*{-1.1cm}
-    \framebox[\textwidth]{
-        \vbox{
-            \vspace{1mm}
-            \hbox to \textwidth { {\footnotesize \bfseries CMPUT 653: Foundations of Reasoning in LLMs \hfill Fall 2025} }
-            \vspace{3mm}
-            \hbox to \textwidth { {\large\hfill #1 \hfill} }
-            \vspace{2mm}
-            \hbox to \textwidth { {\footnotesize\itshape Lecturer: #2 \hfill #4 \hfill Scribe: #3} }
-            \vspace{1mm}
-        }
-    }
-    \vspace*{-0.6cm}
-}
-
-
-% 1) Header content
-\fancyhead[L]{\nouppercase{\leftmark}}   % Current section title (top-left)
-\fancyhead[R]{\thepage}                  % Page number (top-right)
-
-% 2) Ensure section titles are captured in \leftmark
-\makeatletter
-\renewcommand{\sectionmark}[1]{%
-  \markboth{\thesection\quad #1}{}%
-}
-\makeatother
-
-% FIGURE NUMBER BY SUBSECTION
-\usepackage{chngcntr}
-\counterwithin{figure}{subsection}
-\renewcommand{\thefigure}{\arabic{section}.\arabic{subsection}.\arabic{figure}}
-
-% THEOREM/DEFINITION STYLES
-\newtheoremstyle{spaceddefn}  % Name of style
-  {1em}   % Space above
-  {1em}   % Space below
-  {}      % Body font
-  {}      % Indent amount
-  {\bfseries} % Theorem head font
-  {.}     % Punctuation after theorem head
-  {.5em}  % Space after theorem head
-  {}      % Head spec
-
-\theoremstyle{spaceddefn}
-
-% All under the same section/subsection counter
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{prop}[theorem]{Proposition}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{lemma}[theorem]{Lemma}
-
-% A new counter under
-\newtheorem{definition}{Definition}[section]
-\newtheorem{remark}{Remark}[section]
-\newtheorem{example}{Example}[section]
-\newtheorem{exercise}{Exercise}[section]
-\newtheorem{soln}{Solution}[section]
-\newtheorem{question}{Question}[section]
-
-%\newcommand{"command"}[arguments]{what the command actually is}
-\newcommand{\NN}[0]{\mathbb{N}}
-\newcommand{\RR}[0]{\mathbb{R}}
-\newcommand{\CC}[0]{\mathbb{C}}
-\newcommand{\FF}[0]{\mathbb{F}}
-\newcommand{\inner}[2]{\left\langle#1, #2\right\rangle}
-\newcommand{\soa}[1]{{#1}}
-\newcommand{\mapping}[0]{\overset{}{\longrightarrow}}
-\newcommand{\conv}[0]{\mathrm{conv}}
-\newcommand{\aconv}[0]{\mathrm{aconv}}
-\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
-\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
-\newcommand{\calA}{\mathcal{A}}
-\newcommand{\calB}{\mathcal{B}}
-\newcommand{\calC}{\mathcal{C}}
-\newcommand{\calD}{\mathcal{D}}
-\newcommand{\calE}{\mathcal{E}}
-\newcommand{\calF}{\mathcal{F}}
-\newcommand{\calG}{\mathcal{G}}
-\newcommand{\calH}{\mathcal{H}}
-\newcommand{\calI}{\mathcal{I}}
-\newcommand{\calJ}{\mathcal{J}}
-\newcommand{\calK}{\mathcal{K}}
-\newcommand{\calL}{\mathcal{L}}
-\newcommand{\calM}{\mathcal{M}}
-\newcommand{\calN}{\mathcal{N}}
-\newcommand{\calO}{\mathcal{O}}
-\newcommand{\calP}{\mathcal{P}}
-\newcommand{\calQ}{\mathcal{Q}}
-\newcommand{\calR}{\mathcal{R}}
-\newcommand{\calS}{\mathcal{S}}
-\newcommand{\calT}{\mathcal{T}}
-\newcommand{\calU}{\mathcal{U}}
-\newcommand{\calV}{\mathcal{V}}
-\newcommand{\calW}{\mathcal{W}}
-\newcommand{\calX}{\mathcal{X}}
-\newcommand{\calY}{\mathcal{Y}}
-\newcommand{\calZ}{\mathcal{Z}}
-
-
-% POTENTIALLY BETTER SPACING???
-% \DeclareMathOperator*{\argmin}{arg\,min}
-% \DeclareMathOperator*{\argmax}{arg\,max}
-% \DeclareMathOperator*{\supp}{supp}
-% \DeclareMathOperator*{\rank}{rank}
-% \DeclareMathOperator*{\diag}{diag}
-% \DeclareMathOperator*{\Tr}{Tr}
-
-
-% FORMATTING and FONT
-\usepackage{parskip} % Leaves a blank line between paragraph and omits indentation
-\usepackage[margin=1.5in]{geometry} % Set default 1.5 inch margins
-\usepackage{setspace} % Default spacing to 1 by setstretch
-\setstretch{1} % Default spacing to 1
-\usepackage{lmodern} % Cleaner/Modern font
-\usepackage{enumitem} % Customizable lists/enumeration
-\setlist[itemize,2]{label=$\circ$} % Set white bullet (◦) for second-level itemize
+\usepackage{styles}
 
 \begin{document}
 
@@ -451,7 +299,7 @@ First, we look at \textbf{finite sequences}, $\Sigma^{n*} \coloneqq \bigcup_{i=0
     Read over this lecture: Provide the intuition and re-define the transformer architecture to the specific well-known euclidean space $\mathbb{R}^n$.
 \end{exercise}
 
-Transformers map strings to strings, and we generalize them to abstract vector spaces for alternatives to Euclidean space \textit{(e.g language RASP)}. Why are vector spaces important? The transformer acts in the workspace $\mathcal{W}$.
+Transformers map strings to strings, and we generalize them to abstract vector spaces for alternatives to Euclidean space. Why are vector spaces important? Because transformers act in the vector space, $\mathcal{W}$.
 
 \begin{definition}[Workspace]
 Let $\mathcal{W} \neq \emptyset$ be a \textbf{vector space} over scalars $\{0, 1\}$ called a \textbf{workspace}. The elements $\mathbf{x} \in \mathcal{W}$ are called vectors.
@@ -599,7 +447,7 @@ Other Discussions:
     \item \href{https://youtu.be/1u6h3Nm3NvM?si=DPbOrvmmc-rPRJFs&t=3055}{Decoding Strategies [*50:55]}
     \item \href{https://youtu.be/1u6h3Nm3NvM?si=vG1ilQpx0IZ3sRSs&t=3682}{Complexity of Matrices [*1:01:22]}
     \item \href{https://youtu.be/1u6h3Nm3NvM?si=9r417PXiPrKnlHgQ&t=3833}{Precision [*1:03:53]}
-    \item \textbf{Layered Norm \href{https://youtu.be/1u6h3Nm3NvM?si=AD17k53UucXSlnau&t=2622}{[*43:42]}:} Randomly thrown in to rescale the vectors to have a consistent mean and variance. This is done to stabilize the transformer. (Incorrect? \textbf{Remove and Fix})
+    \item \href{https://youtu.be/2MRAX8EdBA8?si=O1TxoxJ9oHUUIL8z&t=1051}{Layered Norm [**17:31]} From Lec. 4, Lec. 3 explanation is incorrect
 \end{itemize}
 
 
@@ -627,8 +475,108 @@ Now the abstract workspace $\mathcal{W}=\mathbb{R}^d$
 \[ a_\ell(q,k) = \text{softmax}\left(\frac{q^T k}{\sqrt{d_k}}\right) \]
 Measures similarity between the query and key vectors
 
-
 \end{soln}
+
+\newpage
+
+\makelecturetitle{\href{https://youtu.be/2MRAX8EdBA8?si=7kkHeTcZj4tch-1o}{Lecture 4 Video}}{Csaba Szepesvári}{Siddhartha Chitrakar}{Sep. 11, 2025}
+
+% ↓↓↓ REMOVE SECTION FROM HEADER ↓↓↓
+\fancypagestyle{RemoveHeader}{
+  \fancyhf{} % clear all headers/footers
+    \fancyhead[R]{\thepage} % keep page number on top right
+}
+\thispagestyle{RemoveHeader}
+% ↑↑↑ REMOVE SECTION FROM HEADER ↑↑↑
+
+% ↓↓↓ SHOW CORRECT SECTION FROM HEADER WITHOUT # ↓↓↓
+\markboth{Lecture 4: Thinking Like Transformers}{Lecture 4: Thinking Like Transformers}
+\stepcounter{section}
+
+\section*{Lecture 4: Thinking Like Transformers}
+\addcontentsline{toc}{section}{3. Transformer Function Class}
+% ↑↑↑ SHOW CORRECT SECTION FROM HEADER WITHOUT # ↑↑↑
+
+\textit{Note:} This section explores the capabilities of transformers, specifically the class of functions they can compute.
+
+\subsection*{4.1 RASP: Restricted Access Sequence Processing
+\href{https://youtu.be/2MRAX8EdBA8?si=IgoHB-DrNRVb_ehB&t=321}{[5:21]}}
+
+From "Thinking like Transformers" by Weiss et al. \cite{weiss2021thinking}, RASP language allows us to think the types of functions transformers can compute by defining primitive functions analogous to a transformer. RASP-L is a variant of this with more restrictions like limiting functions to 8-bit integers.
+
+In RASP we ignore the vector space structure by instead working with a sequence of integers. A function $f$ is defined as $f: \mathbb{Z} (\text{int-8}) \to \mathbb{Z} (\text{int-8})$, on a sequence $ S  \coloneqq [s_0,s_1,\dots,s_{n-1}]$ where each $s_i \in \mathbb{Z}$.
+
+\textbf{RASP Primitive Functions:} RASP uses the following primitive functions:
+
+\begin{enumerate}
+\item \textbf{Token-wise Map}: Applies function f to each element of a sequence.
+$$ \texttt{tokmap}(S,f) \implies [f(S[i]) \text{ for } i \in \{0, \dots, n-1\}] $$
+
+\item \textbf{Sequence-wise Map}: Applies function $f$ to two sequences, $S_1$ and $S_2$.
+$$ \texttt{seqmap}(S_1, S_2, f) \implies [f(S_1[i], S_2[i]) \text{ for } i \in \{0, \dots, n-1\}] $$
+
+\item \textbf{Attention Map}: Models the  attention mechanism.
+$$
+\texttt{kqv}(Q, K, V, \texttt{pred}, \texttt{agg}):
+$$
+\begin{enumerate}
+    \item \textbf{Attention Matrix Creation}: $\forall (i,j)$, the predicate function creates a boolean attention matrix $A$ from the $ith$ query and $jth$ key.
+    $$\forall(i,j), A[i,j] = \texttt{pred}(Q[i], K[j]) $$
+    \item \textbf{Value Selection}: $\forall i$, a list of values $V[i]$ is formed from the values $V[j]$ where the attention matrix entry is true.
+    $$\forall i, V[i] = [V[j] \text{ for j in [n] if }A[i,j] = \text{True}] $$
+    \item \textbf{Aggregation}: Applied to $V[i]$ to produce the final output. The common aggregation functions are $\texttt{mean}$, $\texttt{max}$, or $\texttt{min}$.
+    $$ \texttt{out}[i] = \texttt{agg}(V[i]) $$
+\end{enumerate}
+The function then returns the output sequence $\texttt{out}$.
+
+\item \textbf{Indices}: Returns the indices sequence of integers from 0 to $n-1$
+$$ \texttt{indices}() \implies [0, 1, \dots, n-1] $$
+
+\end{enumerate}
+
+\subsection*{4.2 RASP Exercises}
+
+\begin{exercise} \label{ex:3.1}\href{https://youtu.be/2MRAX8EdBA8?si=XAs4mEP1f94aiN26&t=1928}{[32:10]} Using the RASP primitives, write the function:
+$$ \texttt{replace}(S, v_{in}, v_{out}) $$
+where $S$ is a sequence of integers, and $v_{in}$, $v_{out}$ are integers. The function should return a sequence such that the output is:
+$$ [v_{out} \texttt{ if } S[i] == v_{in} \texttt{ , else } S[i] \texttt{ for i in [n]}] $$
+
+\end{exercise}
+
+\begin{exercise} \label{ex:3.2}\href{https://youtu.be/2MRAX8EdBA8?si=oSIV4BYVMGFX85G-&t=3243}{[54:08]}
+Now, what if we don't have access to $v_{in}, v_{out}$. Using the RASP primitives, write the function:
+$$ \texttt{replace}(S) $$
+where $S$ is a sequence of integers. For this function, let $v_{in}$, be the first element ($S[0]$), and $v_{out}$, be the second element ($S[1]$).
+
+The function should return a sequence such that the output is:
+$$ [S[1] \texttt{ if } S[i] == S[0]\texttt{, else } S[i] \texttt{ for i in [n]}] $$
+\end{exercise}
+
+\begin{exercise} \label{ex:3.3}\href{https://youtu.be/2MRAX8EdBA8?si=QGFYtKdnMASlIUWs}{[1:05:26]} Can you reverse a string in-place with causal attention and/or without? If you can't reverse, is there a trick to not do it in-place?
+
+\end{exercise}
+
+\newpage
+
+\makelecturetitle{\href{https://youtu.be/hzkRibaG3xU?si=GwglksvCoGorJNY_}{Lecture 5 Video}}{Vlad Tkachuk}{Siddhartha Chitrakar}{Sep. 16, 2025}
+
+% ↓↓↓ REMOVE SECTION FROM HEADER ↓↓↓
+\fancypagestyle{RemoveHeader}{
+  \fancyhf{} % clear all headers/footers
+    \fancyhead[R]{\thepage} % keep page number on top right
+}
+\thispagestyle{RemoveHeader}
+% ↑↑↑ REMOVE SECTION FROM HEADER ↑↑↑
+
+% ↓↓↓ SHOW CORRECT SECTION FROM HEADER WITHOUT # ↓↓↓
+\markboth{Lecture 5: Computational Limits of Transformers}{Lecture 5: Computational Limits of Transformers}
+\stepcounter{section}
+
+\section*{Lecture 5: Computational Limits of Transformers}
+\addcontentsline{toc}{section}{4. Computational Limits of Transformers}
+% ↑↑↑ SHOW CORRECT SECTION FROM HEADER WITHOUT # ↑↑↑
+
+\textit{Note:} This section explores the capabilities of transformers, specifically the class of functions they can compute.
 
 \newpage
 
@@ -646,8 +594,7 @@ More appendix content here.
 
 \newpage
 \printbibliography
+
 \addcontentsline{toc}{section}{References}
-
-
 
 \end{document}

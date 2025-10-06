@@ -1,0 +1,154 @@
+\usepackage{graphicx} % Inserting Images
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb, mathtools, marvosym}
+\usepackage [english]{babel}
+\usepackage [autostyle, english = american]{csquotes}
+\MakeOuterQuote{"} % No need to do \enquote{...}
+
+% HYPERLINKING and FORMATTING
+\usepackage{xcolor} % Hyperlink style
+\usepackage{hyperref} % Hyperlinking
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+\usepackage{caption} % Make hyperlink format nice
+\captionsetup[figure]{labelfont=bf}
+\usepackage{float} % Makes image formatting good
+
+% REFERNCES and CITATION
+ \usepackage[
+    backend=biber,
+    style=ieee,
+  ]{biblatex}
+ \addbibresource{references.bib}
+
+% HEADER SETUP AND STYLE
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}  % Clear all header/footer fields
+\fancyheadoffset{0pt} % Makes horizontal line text width
+
+
+% LECTURE TITLE BOX COMMAND
+\newcommand{\makelecturetitle}[4]{%
+    \thispagestyle{fancy}
+    \vspace*{-1.1cm}
+    \framebox[\textwidth]{
+        \vbox{
+            \vspace{1mm}
+            \hbox to \textwidth { {\footnotesize \bfseries CMPUT 653: Foundations of Reasoning in LLMs \hfill Fall 2025} }
+            \vspace{3mm}
+            \hbox to \textwidth { {\large\hfill #1 \hfill} }
+            \vspace{2mm}
+            \hbox to \textwidth { {\footnotesize\itshape Lecturer: #2 \hfill #4 \hfill Scribe: #3} }
+            \vspace{1mm}
+        }
+    }
+    \vspace*{-0.6cm}
+}
+
+
+% 1) Header content
+\fancyhead[L]{\nouppercase{\leftmark}}   % Current section title (top-left)
+\fancyhead[R]{\thepage}                  % Page number (top-right)
+
+% 2) Ensure section titles are captured in \leftmark
+\makeatletter
+\renewcommand{\sectionmark}[1]{%
+  \markboth{\thesection\quad #1}{}%
+}
+\makeatother
+
+% FIGURE NUMBER BY SUBSECTION
+\usepackage{chngcntr}
+\counterwithin{figure}{subsection}
+\renewcommand{\thefigure}{\arabic{section}.\arabic{subsection}.\arabic{figure}}
+
+% THEOREM/DEFINITION STYLES
+\newtheoremstyle{spaceddefn}  % Name of style
+  {1em}   % Space above
+  {1em}   % Space below
+  {}      % Body font
+  {}      % Indent amount
+  {\bfseries} % Theorem head font
+  {.}     % Punctuation after theorem head
+  {.5em}  % Space after theorem head
+  {}      % Head spec
+
+\theoremstyle{spaceddefn}
+
+% All under the same section/subsection counter
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+
+% A new counter under
+\newtheorem{definition}{Definition}[section]
+\newtheorem{remark}{Remark}[section]
+\newtheorem{example}{Example}[section]
+\newtheorem{exercise}{Exercise}[section]
+\newtheorem{soln}{Solution}[section]
+\newtheorem{question}{Question}[section]
+
+%\newcommand{"command"}[arguments]{what the command actually is}
+\newcommand{\NN}[0]{\mathbb{N}}
+\newcommand{\RR}[0]{\mathbb{R}}
+\newcommand{\CC}[0]{\mathbb{C}}
+\newcommand{\FF}[0]{\mathbb{F}}
+\newcommand{\inner}[2]{\left\langle#1, #2\right\rangle}
+\newcommand{\soa}[1]{{#1}}
+\newcommand{\mapping}[0]{\overset{}{\longrightarrow}}
+\newcommand{\conv}[0]{\mathrm{conv}}
+\newcommand{\aconv}[0]{\mathrm{aconv}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calH}{\mathcal{H}}
+\newcommand{\calI}{\mathcal{I}}
+\newcommand{\calJ}{\mathcal{J}}
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calN}{\mathcal{N}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calQ}{\mathcal{Q}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+
+
+% POTENTIALLY BETTER SPACING???
+% \DeclareMathOperator*{\argmin}{arg\,min}
+% \DeclareMathOperator*{\argmax}{arg\,max}
+% \DeclareMathOperator*{\supp}{supp}
+% \DeclareMathOperator*{\rank}{rank}
+% \DeclareMathOperator*{\diag}{diag}
+% \DeclareMathOperator*{\Tr}{Tr}
+
+
+% FORMATTING and FONT
+\usepackage{parskip} % Leaves a blank line between paragraph and omits indentation
+\usepackage[margin=1.5in]{geometry} % Set default 1.5 inch margins
+\usepackage{setspace} % Default spacing to 1 by setstretch
+\setstretch{1} % Default spacing to 1
+\usepackage{lmodern} % Cleaner/Modern font
+\usepackage{enumitem} % Customizable lists/enumeration
+\setlist[itemize,2]{label=$\circ$} % Set white bullet (◦) for second-level itemize
