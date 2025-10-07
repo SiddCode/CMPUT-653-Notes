@@ -295,8 +295,8 @@ First, we look at \textbf{finite sequences}, $\Sigma^{n*} \coloneqq \bigcup_{i=0
 
 \textbf{Assumption:} From now on and for convenience $\Sigma \coloneqq \hat{\Sigma}=\Sigma \cup \langle STOP\rangle$
 
-\begin{exercise}
-    Read over this lecture: Provide the intuition and re-define the transformer architecture to the specific well-known euclidean space $\mathbb{R}^n$.
+\begin{exercise} \label{ex:2.1}
+    Read over this lecture: Provide the intuition and re-define the transformer architecture to the specific well-known euclidean space $\mathbb{R}^d$.
 \end{exercise}
 
 Transformers map strings to strings, and we generalize them to abstract vector spaces for alternatives to Euclidean space. Why are vector spaces important? Because transformers act in the vector space, $\mathcal{W}$.
@@ -337,7 +337,7 @@ Before we define transformers, here is \textbf{notation} for component map exten
 \end{itemize}
 
 \subsection*{2.1 Intuition of Transformer Architecture }
-\addcontentsline{toc}{subsection}{Intuition of Transformer Architecture}
+\addcontentsline{toc}{subsection}{2.1 Intuition of Transformer Architecture}
 
 \textbf{Intuition:} \href{https://www.youtube.com/watch?v=KJtZARuO3JY}{[Talk by 3B1B]} is a good source to visualize the intuition
 
@@ -366,7 +366,7 @@ The multilayer perceptron $m_\ell^{[n]}$ performs a non-linear transformation on
 After $L$ layers, the "enriched" vectors is unembeded by $u^{[n]}: \mathcal{W}^n \to \Sigma^n$. This maps the last vectors to the vocab space $\Sigma$ to produce an output sequence.
 
 \subsection*{2.2 Definition of Transformer Architecture \href{https://youtu.be/DR8bQPoRlX8?si=7ShQDJNzFFenFIuP&t=2253}{[37:39]}, \href{https://youtu.be/1u6h3Nm3NvM?si=Orlh2gRtZ3yXKfI9&t=373}{[*6:13]}}
-\addcontentsline{toc}{subsection}{Definition of Transformer Architecture}
+\addcontentsline{toc}{subsection}{2.2 Definition of Transformer Architecture}
 
 \begin{definition}[Transformer Map] \label{def:2.4}
 $f: \Sigma^* \to \Sigma^*$ is a regular \textbf{transformer map} over the sets of functions $\mathcal{M}, \mathcal{A}, \mathcal{Q}, \mathcal{K}, \mathcal{V}$ if $\forall n \ge 1$,
@@ -457,7 +457,7 @@ Other Discussions:
 
 \begin{soln}
 
-Why in practice do we use $\mathbb{R}^n$? So we can encode the sequences to vectors and provide some meaning to it with numbers.
+Why in practice do we use $\mathbb{R}^d$? So we can encode the sequences to vectors and provide some meaning to it with numbers.
 
 \textbf{Redefining Transformers}
 Now the abstract workspace $\mathcal{W}=\mathbb{R}^d$
@@ -492,10 +492,14 @@ Measures similarity between the query and key vectors
 % ↓↓↓ SHOW CORRECT SECTION FROM HEADER WITHOUT # ↓↓↓
 \markboth{Lecture 4: Thinking Like Transformers}{Lecture 4: Thinking Like Transformers}
 \stepcounter{section}
+\stepcounter{section}
 
 \section*{Lecture 4: Thinking Like Transformers}
 \addcontentsline{toc}{section}{3. Transformer Function Class}
 % ↑↑↑ SHOW CORRECT SECTION FROM HEADER WITHOUT # ↑↑↑
+
+\addcontentsline{toc}{subsection}{3.1 Think What Functions Transformers Can Represent}
+
 
 \textit{Note:} This section explores the capabilities of transformers, specifically the class of functions they can compute.
 
@@ -572,11 +576,200 @@ $$ [S[1] \texttt{ if } S[i] == S[0]\texttt{, else } S[i] \texttt{ for i in [n]}]
 \markboth{Lecture 5: Computational Limits of Transformers}{Lecture 5: Computational Limits of Transformers}
 \stepcounter{section}
 
-\section*{Lecture 5: Computational Limits of Transformers}
-\addcontentsline{toc}{section}{4. Computational Limits of Transformers}
+\section*{Lecture 5: Transformer Representational Power}
+\addcontentsline{toc}{subsection}{3.2 Representational Power of Transformers}
 % ↑↑↑ SHOW CORRECT SECTION FROM HEADER WITHOUT # ↑↑↑
 
-\textit{Note:} This section explores the capabilities of transformers, specifically the class of functions they can compute.
+\textit{Note:} Last lecture gave an intuition on what functions can transformers compute; this lecture formally studies what functions transformers can represent
+
+\begin{example} [Parity Function, XOR] \label{ex:4.1}
+    Consider the \textbf{parity function}  as $P: \{0,1\}^n \to \{0,1\}$ such that $P(x) = \left( \sum_{i=1}^n x_i \right) \pmod 2$.
+
+    Let function class $\mathcal{N}_n(s(n)) \coloneqq \left\{ f: \{0,1\}^n \to \{0,1\} \mid \exists \theta \text{ s.t. } NN_\theta = f \right\}$ with:
+    \begin{itemize}
+        \item A single hidden layer of size $O(s(n))$.
+        \item Sign activation functions.
+    \end{itemize}
+    $$
+    \text{If } s(n) \in o(2^n), \text{ then Parity} \notin \mathcal{N}_n(s(n))
+    $$
+    This example motivates an expressive power limitations. They can't represent a parity function, which motivates what functions can Transformers represent. How does changing architecture features like depth or width change things...
+\end{example}
+
+\begin{remark} \label{rm:4.1}
+    Recall Transformer Definition \ref{def:2.4}. We assume:
+    \begin{itemize}
+        \item $\mathcal{W}=\mathbb{R}^d $ (i.e Exercise \ref{ex:2.1})
+        \item $e(w) = \underbrace{\theta_{TE}w}_{\text{Token Embedding}} + \underbrace{\theta_{PE}}_{\text{Positional Embedding}}$
+        \item $m_\ell(\mathbf{z}) = \mathbf{z} + W_2^{(\ell)} \text{ReLU}(W_1^{(\ell)} \mathbf{z} + \mathbf{b}_1^{(\ell)}) + \mathbf{b}_2^{(\ell)}
+        $
+        \begin{itemize}
+            \item where $\theta_{MLP}^{(\ell)} = (W_1^{(\ell)}, W_2^{(\ell)}, \mathbf{b}_1^{(\ell)}, \mathbf{b}_2^{(\ell)})$.
+        \end{itemize}
+
+        \item $(A_\ell^{(n)}(\mathbf{x}))_i = \mathbf{x}_i + \sum_{j=1}^{i} a_\ell(W_Q^{(\ell)} \mathbf{x}_i, W_K^{(\ell)} \mathbf{x}_j) W_V^{(\ell)} \mathbf{x}_j
+        $
+        \begin{itemize}
+            \item where $\theta_{ATTN}^{(\ell)} = (W_Q^{(\ell)}, W_K^{(\ell)}, W_V^{(\ell)})$.
+            \item Denote the sum up to $i$ as causal and $i-1$ as strict causal attention.
+        \end{itemize}
+
+        \item $u(\mathbf{z}) = \underset{j \in \Sigma}{\text{argmax}} \, (\theta_U \mathbf{z})_j$
+    \end{itemize}
+\end{remark}
+
+\begin{definition}[Transformer Parameter Set]
+    A Transformer in Remark \ref{rm:4.1} is parameterized by a set of learnable parameters, denoted by $\Theta$. \href{https://youtu.be/hzkRibaG3xU?si=9N9K0oWPkgmzpGCm&t=2004}{[33:24]}
+    $$
+    \Theta = \left( \theta_{TE}, \theta_{PE}, \left( \theta_{MLP}^{(\ell)}, \theta_{ATTN}^{(\ell)} \right)_{\ell \in [L]}, \theta_U \right)
+    $$
+    where:
+    \begin{itemize}
+        \item $\theta_{TE} \in \mathbb{R}^{d \times |\Sigma|}$ is the token embedding matrix.
+        \item $\theta_{PE} \in \mathbb{R}^{n \times d}$ is positional embedding parameters.
+        \item $\left( \theta_{MLP}^{(\ell)}, \theta_{ATTN}^{(\ell)} \right)_{\ell \in [L]}$ is the MLP and attention parameters for $\ell \in \{ 1,2,\dots,L\}$ layers such that each matrix is $\mathbb{R}^{d\times d}$
+        \item $\theta_U \in \mathbb{R}^{|\Sigma| \times d}$ is the parameter matrix for the final unembedding layer.
+    \end{itemize}
+\end{definition}
+
+\textbf{What Are Some Architectural Differences Can We Have?} \href{https://youtu.be/hzkRibaG3xU?si=LqlnSDeyf_76L-g-&t=2159}{[36:00]}
+
+\begin{itemize}
+    \item \textbf{Depth (L):} The number of layers (constant) in the Transformer
+    \item \textbf{Width (d):} The embedding size, $d \log(n)$
+    \item \textbf{Precision:} The numerical precision as practical implementations are limited by finite-precision arithmetic (e.g., float, int).
+    \item \textbf{Layer Norm:} Layer norms vary affecting stability and performance.
+    \item \textbf{Multi-head Attention:} This doesn't vary too drastically as you can simulate multi-head attention with single.
+\end{itemize}
+
+\begin{definition}[Transformer Function Class]
+    Let width $d(n)$ and precision $p(n)$ be functions of the input size $n$. We define the class of functions computable by a Transformer, $\mathcal{T}(d(n), p(n))$, as follows:
+    $$
+    \mathcal{T}(d(n), p(n)) = \left\{
+    f: \Sigma^* \to \Sigma^* \mid \forall n \in \mathbb{N}, \exists \theta \text{ s.t. }
+    \left. TF_\theta \right|_{\bigcup_{m=1}^n \Sigma^m} = \left. f \right|_{\bigcup_{m=1}^n \Sigma^m}
+    \right\}
+    $$
+    where the Transformer $TF_\theta$ is constrained by:
+    \begin{itemize}
+        \item Width: The embedding dimension is $\mathcal{O}(d(n))$.
+        \item Precision: The parameters $\theta$ are $\mathcal{O}(p(n))$ .
+    \end{itemize}
+\end{definition}
+
+\newpage
+\textbf{Now, what functions should we care about?} \href{https://youtu.be/hzkRibaG3xU?si=E-MZnOr3eWipVv9I&t=2989}{[49:49]}
+
+We consider "reasoning problems". Problems with steps like a graph problem that output 1 if there is a path and 0 otherwise. We redefine our class:
+
+\begin{definition}[Transformer Function Class for "Reasoning Problems"]
+    $$
+    \mathcal{T}(d(n), p(n)) = \left\{
+    f: \textbf{\{0,1\}}^* \to \textbf{\{0,1\}}^* \mid \forall n \in \mathbb{N}, \exists \theta \text{ s.t. }
+    \left. TF_\theta \right|_{\bigcup_{m=1}^n \Sigma^m} = \left. f \right|_{\bigcup_{m=1}^n \Sigma^m}
+    \right\}
+    $$
+\end{definition}
+
+The lecture then \textbf{discusses} the \textbf{intuition} and \textbf{overview} of what next:
+
+\vspace{0.5cm}
+
+\textbf{Turing Machine (TM):} \href{https://youtu.be/hzkRibaG3xU?si=7cm22VcpRcPOV8Ft}{[56:00]} We can define function classes to how much resources we give to a TM (finite state machine with unbounded memory).
+\begin{itemize}
+    \item Resources are time \href{https://youtu.be/hzkRibaG3xU?si=Q9Tl8uAS2qtgvRs0}{[58:08]} (class below) and space (not discussed)
+    \item \small $DTime(t(n)) = \left\{ f: \{0,1\}^* \to \{0,1\} \mid \exists \text{ a TM that computes } f \text{ in } O(t(n)) \text{ steps} \right\}$
+    \item \normalsize Note: the class "P" often in P/NP formulations is $P = \bigcup_{i \geq 1} DTime(n^i)$
+\end{itemize}
+
+\vspace{0.5cm}
+
+The \textbf{main takeaway of this lecture \href{https://youtu.be/hzkRibaG3xU?si=P2letdHwZ9f0P4Uh&t=4297}{[1:11:37]}} is what can chain-of-thought function class, $COT(t(n), d(n),p(n)$ improve? Formally:
+$$DTime(t(n)) \subseteq COT(t(n), 1, \log(n)) \subseteq DTime(t^2(n)+n^2)$$
+\begin{itemize}
+    \item Notice $\bigcup_{i \geq0}COT(n^i, \dots)=P$
+    \item \textbf{If $t(n)$ is unbounded then $COT(t(n),\dots)$ is Turing Complete}
+    \item \href{https://youtu.be/hzkRibaG3xU?si=WiZlnsh6q3kw9StD&t=4564}{[1:16:04]} Briefly mentions current/future work like loop transformers \cite{merrill2025exact}
+\end{itemize}
+
+\newpage
+
+\makelecturetitle{\href{https://youtu.be/ShM-T4oeYjw?si=7FYqjGF9FgjfORW9}{Lecture 6 Video}}{Dale Schuurmans}{Siddhartha Chitrakar}{Sep. 18, 2025}
+
+% ↓↓↓ REMOVE SECTION FROM HEADER ↓↓↓
+\fancypagestyle{RemoveHeader}{
+  \fancyhf{} % clear all headers/footers
+    \fancyhead[R]{\thepage} % keep page number on top right
+}
+\thispagestyle{RemoveHeader}
+% ↑↑↑ REMOVE SECTION FROM HEADER ↑↑↑
+
+% ↓↓↓ SHOW CORRECT SECTION FROM HEADER WITHOUT # ↓↓↓
+\markboth{Lecture 6: Autoregressive LLMs Are Computationally Universal}{Lecture 6: Autoregressive LLMs Are Computationally Universal}
+\stepcounter{section}
+
+\section*{\normalsize Lecture 6: Autoregressive LLMs Are Computationally Universal}
+\addcontentsline{toc}{subsection}{3.3 Autoregressive LLMs Are Computationally Universal}
+% ↑↑↑ SHOW CORRECT SECTION FROM HEADER WITHOUT # ↑↑↑
+
+\textit{\textbf{Note:}} This lecture discussed the paper shown below \cite{schuurmans2024autoregressive}; thus, I will link the sections talked about the paper but read the paper for more info. \href{https://arxiv.org/abs/2410.03170}{[Paper Link]}
+
+\begin{figure}[h]
+    \centering
+    \fbox{\includegraphics[width=0.62\textwidth]{Figures/AutoLLMs.png}}
+    \caption{The paper this lecture is based on \cite{schuurmans2024autoregressive}. Read for more info.}
+    \label{fig: 2.1.1}
+\end{figure}
+
+\begin{itemize}
+    \item Introduction \href{https://youtu.be/ShM-T4oeYjw?si=fsZwObn6LdUuPIMA}{[5:28]}
+    \begin{itemize}
+        \item Recall Theorem \ref{thm:1.1}, Chain Rule of Probability \href{https://youtu.be/ShM-T4oeYjw?si=xZnM8GOIv6OGB-Ra&t=379}{[6:19]}
+        \item The bounded context window defines a K-Markov model \href{https://youtu.be/ShM-T4oeYjw?si=PZ1ZMbLjJaIqu7_Q&t=501}{[8:27]}
+        \item Challenge: Figure how to operate a K-Markov model on an input string larger than K
+    \end{itemize}
+    \item Extend Chain Rule of Prob. to Extended Autoregressive Decoding \href{https://youtu.be/ShM-T4oeYjw?si=e4lvOWzkCGe_ClLH}{[10:10]}
+    \begin{itemize}
+        \item Idea: Extension generates and append two symbols instead of one
+    \end{itemize}
+    \item Introduction and Examples of LAG Systems \href{https://youtu.be/ShM-T4oeYjw?si=QOeX4wHOR30GQbBF&t=1271}{[21:11]}
+\end{itemize}
+\begin{definition}[Lag System]
+A Lag system consists of a finite set of rules $x_1...x_N \to y$, where $N$ is the length of the context, $x_1...x_N \in \Sigma^N$ denotes a sequence of symbols to be matched, and $y \in \Sigma^*$ is a corresponding output \cite{schuurmans2024autoregressive}.
+
+For a deterministic Lag system, each pattern $x_1...x_N$ is unique, hence the Lag system defines a partial function $L : \Sigma^N \to \Sigma^*$ that maps a pattern $x_1...x_N$ to a corresponding output y \cite{schuurmans2024autoregressive}.
+
+Lag system computation is defined by operating over a memory string, where in each iteration, a rule is matched to the prefix of the memory string, then the result appended to the string, after which the first symbol is deleted \cite{schuurmans2024autoregressive}.
+\end{definition}
+\hrule
+\textbf{For interesting behavior, we have at least a rule that appends more than 1 symbol.} We also introduce a Halt symbol $H$ to terminate whenever generated. Computation also terminates when there is no rule for the current context, which includes when the current memory string is shorter than $N$.
+
+\begin{itemize}
+    \item Lag System Operates Memory as a Queue Machine \href{https://youtu.be/ShM-T4oeYjw?si=kr1ip53SZuYQ0LT0&t=1785}{[29:45]}
+    \begin{itemize}
+        \item Thus, we can rotate the memory even if the memory is bigger than the context size!
+        \item Challenge: The queue machine has no external controller
+        \item Challenge: The queue machine can only operate in one direction
+        \item \textbf{To simulate a TM, we need to track the current machine state and be able to rotate the memory in both directions!}
+    \end{itemize}
+    \item Lag System can track the current state and rotate both directions \href{https://youtu.be/ShM-T4oeYjw?si=Htp1M1CRSuv7LrUi&t=2231}{[37:11]}
+    \begin{itemize}
+        \item Explanation and Simulations \href{https://youtu.be/ShM-T4oeYjw?si=2pF9RDl6k08Ehjk_&t=2575}{[42:55 - 55:10]}
+    \end{itemize}
+    \item Lag Systems simulates a Turing Machine w/ a cubic time overhead \href{https://youtu.be/ShM-T4oeYjw?si=Ara_vbPniwxN2itp&t=3310}{[55:10]}
+    \begin{itemize}
+        \item Examples and Simulations \href{https://youtu.be/ShM-T4oeYjw?si=FZf4ewMOwBZ4L3k8&t=3831}{[1:03:51]}
+    \end{itemize}
+    \item Autoregressive LLM can simulate a Universal LAG System \href{https://youtu.be/ShM-T4oeYjw?si=BXQV-wcwkZz7P8BO&t=4207}{[1:10:07]}
+    \begin{itemize}
+        \item Brute force: Entire set of rules as a system prompt to LLM \href{https://youtu.be/ShM-T4oeYjw?si=kNkUy45FYvbykU2V&t=4354}{[1:12:34]}
+        \item Note: Gemini 1.5 Pro was used due to the large context window.
+    \end{itemize}
+    \item Questions/Current/Future Work \href{https://youtu.be/ShM-T4oeYjw?si=iPwZ_a8Hqi404gec&t=4538}{[1:15:38]}
+    \begin{itemize}
+        \item Proof is now done for random LLMs
+    \end{itemize}
+\end{itemize}
 
 \newpage
 
@@ -593,8 +786,8 @@ More appendix content here.
 More appendix content here.
 
 \newpage
-\printbibliography
 
+\printbibliography
 \addcontentsline{toc}{section}{References}
 
 \end{document}
